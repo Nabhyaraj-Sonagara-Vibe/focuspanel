@@ -8,23 +8,28 @@ on:
 
 jobs:
   build-and-test:
-    name: Build & Test (macOS)
+    name: Build & Test (macOS, Xcode)
     runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # GitHub's macOS runners ship a full Xcode, which provides the XCTest
-      # framework that `swift test` needs. Select the latest stable Xcode so the
-      # Swift toolchain and XCTest line up.
+      # GitHub's macOS runners ship a full Xcode install, which the app's real
+      # Xcode project (FocusPanel.xcodeproj) needs — XCTest, code signing, and
+      # app-bundle validation all require full Xcode, not just Command Line
+      # Tools. Select the latest stable Xcode so the toolchain lines up.
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Swift version
-        run: swift --version
+      - name: Xcode version
+        run: xcodebuild -version
 
       - name: Build
-        run: swift build -v
+        run: >
+          xcodebuild -project FocusPanel.xcodeproj -scheme FocusPanel
+          -destination 'platform=macOS' build
 
       - name: Test
-        run: swift test -v
+        run: >
+          xcodebuild -project FocusPanel.xcodeproj -scheme FocusPanel
+          -destination 'platform=macOS' test
