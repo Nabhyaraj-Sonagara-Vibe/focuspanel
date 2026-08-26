@@ -1,23 +1,25 @@
 .DS_Store
 
-## Swift Package Manager
-.build/
-.swiftpm/
-Package.resolved
-
 ## Xcode / build artifacts
 DerivedData/
+build/
 *.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
 *.xcworkspace/xcuserdata/
 xcuserdata/
 *.moved-aside
 *.hmap
 *.ipa
+*.xcresult
 *.dSYM.zip
 *.dSYM
 
+## Swift Package Manager (legacy, kept in case of future SPM-side use)
+.build/
+.swiftpm/
+Package.resolved
+
 ## macOS app bundle build output
-*.app
 dist/
 
 ## Misc
