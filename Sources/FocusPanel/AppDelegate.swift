@@ -6,11 +6,20 @@ import FocusPanelCore
 ///
 /// We bootstrap AppKit directly (rather than the SwiftUI `App`/`WindowGroup`
 /// lifecycle) because the key UX requirement — a small, non-fullscreen window
-/// pinned above other apps at `NSWindow.level = .floating` — needs direct
-/// control over the `NSWindow`. The window hosts the SwiftUI `ContentView`.
+/// pinned above other apps — needs direct control over the window object.
+///
+/// The window is an `NSPanel` (not a plain `NSWindow`): a non-activating,
+/// floating utility panel is the correct AppKit primitive for a widget that
+/// must stay visible *while the user works in another app*. A regular
+/// `NSWindow` at `.floating` level gets tucked away by macOS window
+/// management (Stage Manager, Space switching, app hide-on-deactivate) once
+/// another app becomes active — which is exactly the "it doesn't stay open
+/// while I use another app" symptom. A non-activating panel with
+/// `hidesOnDeactivate = false` and `.canJoinAllSpaces` collection behaviour
+/// stays put across all of those.
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    private var window: NSWindow!
+    private var window: NSPanel!
     private let state = AppState()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -18,40 +27,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let hosting = NSHostingView(rootView: rootView)
 
         // Compact footprint: a slim panel, taller than it is wide, that tucks
-        // into a screen corner. Non-zoomable, only lightly resizable.
+        // into a screen corner.
         let initialSize = NSSize(width: 300, height: 480)
-        let panel = NSWindow(
+        let panel = NSPanel(
             contentRect: NSRect(origin: .zero, size: initialSize),
-            styleMask: [.titled, .closable, .fullSizeContentView],
+            // `.nonactivatingPanel` is the crucial bit: clicking the panel (or
+            // having it visible) doesn't yank activation away from the app the
+            // user is actually working in, and the panel stays on screen while
+            // that other app is frontmost.
+            styleMask: [.titled, .closable, .fullSizeContentView, .nonactivatingPanel],
             backing: .buffered,
             defer: false)
 
         panel.contentView = hosting
         panel.title = "FocusPanel"
 
+        // Behave like a floating HUD/utility panel that never hides when the
+        // app is not frontmost.
+        panel.isFloatingPanel = true
+        panel.hidesOnDeactivate = false
+        panel.becomesKeyOnlyIfNeeded = true   // only take key focus for text entry (the task field)
+
         // Chromeless title bar so our pixel-console chrome reaches the top.
         panel.titlebarAppearsTransparent = true
         panel.titleVisibility = .hidden
 
-        // BUG FIX: whole-window background dragging was stealing clicks from
-        // SwiftUI buttons. AppKit's `isMovableByWindowBackground` drags the
-        // window on *any* mouseDown that a hit-tested view doesn't explicitly
-        // claim, and with `isOpaque = false` that included the todo rows'
-        // translucent backgrounds and icon-only toggle/delete buttons — a
-        // quick tap could register as a sub-pixel drag instead of a click,
-        // making the whole Tasks pane feel unresponsive. We now drag only via
-        // an explicit handle (the title bar), so every button in the content
-        // area reliably receives its click.
+        // Dragging is scoped to an explicit title-bar handle (see
+        // ContentView.WindowDragHandle) rather than the whole background, so
+        // buttons everywhere else reliably receive their clicks.
         panel.isMovableByWindowBackground = false
         panel.backgroundColor = NSColor(red: 0.10, green: 0.10, blue: 0.18, alpha: 1.0)
         panel.isOpaque = true
 
-        // THE key requirement: float above other apps while the user works.
+        // THE key requirement: float above other apps, on every Space, and
+        // over full-screen apps — while the user works elsewhere.
         panel.level = .floating
-        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
         panel.isReleasedWhenClosed = false
 
-        // Keep it small: no fullscreen/zoom, tight min/max size.
+        // Keep it small: no fullscreen/zoom, tight footprint.
         panel.styleMask.remove(.resizable)   // fixed, widget-like footprint
         panel.standardWindowButton(.zoomButton)?.isEnabled = false
         panel.standardWindowButton(.miniaturizeButton)?.isHidden = true
@@ -66,8 +80,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             panel.center()
         }
 
-        panel.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+        // Order it front once at launch. A non-activating panel does not need
+        // (and shouldn't force) full app activation to remain visible.
+        panel.orderFrontRegardless()
         self.window = panel
     }
 

@@ -17,31 +17,39 @@ taking over the screen.
 
 ## What it does
 
-- **Compact, always-on-top floating window.** A slim 300 pt-wide panel set to
-  `NSWindow.level = .floating`, so it stays visible above other apps while you
-  work. Fixed, widget-like footprint (not resizable, not fullscreen), parked in
-  the top-right corner by default and draggable anywhere by its background.
+- **Compact, always-on-top floating window.** A slim 300 pt-wide panel
+  implemented as a non-activating floating `NSPanel`, so it stays visible
+  above other apps *while you keep working in them* — it doesn't get hidden
+  when another app becomes active, and rides along across Spaces and over
+  full-screen apps. Fixed, widget-like footprint (not resizable, not
+  fullscreen), parked in the top-right corner by default and draggable by
+  its title bar.
 - **Full Pomodoro cycle.** Configurable work / short-break / long-break durations
   (defaults 25 / 5 / 15 min), auto-cycling (work → short break, with a long break
-  on every 4th focus session), a big readable countdown with a circular progress
-  ring, and **pause / resume / reset / skip** controls.
+  on every 4th focus session), a big readable countdown with a blocky pixel
+  progress ring, and **pause / resume / reset / skip** controls.
 - **Completed-pomodoro tally & cycle dots** show your progress toward the next
   long break and how many focus sessions you've finished.
 - **Integrated to-do list.** Add tasks, tick them off, delete them, clear
   completed — a slim scrollable checklist that shares the same small footprint via
   a **Timer / Tasks** segmented toggle.
-- **Colourful, session-aware UI.** A retro cartridge-console look directly
-  inspired by Google's [Jerry Lawson Doodle](https://doodles.google/doodle/gerald-jerry-lawsons-82nd-birthday/)
+- **Customizable pixel-art themes.** A retro cartridge-console look inspired by
+  Google's [Jerry Lawson Doodle](https://doodles.google/doodle/gerald-jerry-lawsons-82nd-birthday/)
   (celebrating the Fairchild Channel F, the first cartridge-based home
-  console): a wood/amber console "case" framing a circuit-board-green
-  "screen", thick black pixel outlines, hard edges, flat primary-color
-  accents that shift per session (cartridge red for focus, circuit green for
-  short breaks, console blue for long breaks), and the bundled **Press
-  Start 2P** pixel font throughout.
+  console): a console "case" framing a circuit-board "screen", thick black
+  pixel outlines, hard edges, flat per-session accent colours, and the
+  bundled **Press Start 2P** pixel font throughout. Pick from four built-in
+  themes in Settings — **Channel F** (the original wood-and-green Doodle
+  look), **Game Boy** (4-tone DMG green), **Synthwave** (neon on deep
+  purple), and **Arcade** (bright cabinet primaries on black). Your choice
+  is saved across launches.
+- **Pixel boot animation.** A short one-time "power-on" intro when the panel
+  launches (a CRT scan-line sweep + cartridge-style title flicker), which
+  respects the system **Reduce Motion** setting.
 - **End-of-session alert.** A native macOS user notification and/or an `NSSound`
   chime.
-- **Persists across launches.** Settings, the completed tally, and your todos are
-  stored in `UserDefaults`.
+- **Persists across launches.** Settings (including your theme), the completed
+  tally, and your todos are stored in `UserDefaults`.
 - **100% local.** No network calls, no accounts, no paid or external dependencies —
   Foundation / SwiftUI / AppKit / UserNotifications only.
 

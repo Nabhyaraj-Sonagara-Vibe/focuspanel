@@ -43,7 +43,20 @@ final class AppState: ObservableObject {
 
     var clock: String { TimeFormat.clock(remainingSeconds) }
     var sessionTitle: String { session.title }
-    var accent: Color { Theme.accent(for: session) }
+
+    /// The active visual theme, resolved from the persisted `settings.themeID`.
+    var theme: PixelTheme { ThemeCatalog.theme(id: settings.themeID) }
+
+    /// Accent colour for the current session under the active theme.
+    var accent: Color { theme.accent(for: session) }
+
+    /// Change the theme and persist it, leaving all timer settings intact.
+    func setTheme(id: String) {
+        guard id != settings.themeID else { return }
+        var s = settings
+        s.themeID = id
+        updateSettings(s)
+    }
 
     /// Progress toward the next long break, as filled/empty dots.
     var cycleDots: [Bool] {

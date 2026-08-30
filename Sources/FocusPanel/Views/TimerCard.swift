@@ -3,9 +3,11 @@ import FocusPanelCore
 
 /// The always-visible compact timer: session badge, a chunky pixel-ring
 /// progress indicator built from discrete blocks (not a smooth stroke), and
-/// primary transport — all in the console's hard-edged, flat-color style.
+/// primary transport — all in the console's hard-edged, flat-color style,
+/// coloured by the active theme.
 struct TimerCard: View {
     @EnvironmentObject var state: AppState
+    @Environment(\.pixelTheme) private var theme
 
     var body: some View {
         VStack(spacing: 12) {
@@ -31,14 +33,13 @@ struct TimerCard: View {
     }
 
     /// A ring of small square "pixels" that fill in clockwise as the session
-    /// progresses — echoes the blocky, non-anti-aliased shapes in the Doodle
-    /// rather than a smooth circular stroke.
+    /// progresses — blocky, non-anti-aliased, rather than a smooth stroke.
     private var pixelRing: some View {
         let segments = 32
         let filled = Int(Double(segments) * state.progress)
 
         return ZStack {
-            PixelPanel(fill: Theme.screenGreenDark) {
+            PixelPanel(fill: theme.screenDark) {
                 Color.clear.frame(width: 170, height: 170)
             }
 
@@ -58,7 +59,7 @@ struct TimerCard: View {
                     .foregroundStyle(.white)
                 Text(state.isRunning ? "RUNNING" : "PAUSED")
                     .font(PixelFont.font(size: 7))
-                    .foregroundStyle(Theme.cream.opacity(0.7))
+                    .foregroundStyle(theme.paper.opacity(0.7))
             }
         }
         .frame(width: 176, height: 176)
@@ -66,7 +67,7 @@ struct TimerCard: View {
 
     private var transport: some View {
         HStack(spacing: 14) {
-            PixelButton(systemImage: "arrow.counterclockwise", tint: Theme.caseAmberDark) {
+            PixelButton(systemImage: "arrow.counterclockwise", tint: theme.caseDark) {
                 state.reset()
             }
             .help("Reset current session")
@@ -79,7 +80,7 @@ struct TimerCard: View {
             }
             .help(state.isRunning ? "Pause" : "Start")
 
-            PixelButton(systemImage: "forward.fill", tint: Theme.caseAmberDark) {
+            PixelButton(systemImage: "forward.fill", tint: theme.caseDark) {
                 state.skip()
             }
             .help("Skip to next session")
@@ -91,14 +92,14 @@ struct TimerCard: View {
             HStack(spacing: 5) {
                 ForEach(Array(state.cycleDots.enumerated()), id: \.offset) { _, filled in
                     Rectangle()
-                        .fill(filled ? Theme.accent(for: .work) : Theme.pixelBlack.opacity(0.3))
+                        .fill(filled ? theme.workAccent : Theme.pixelBlack.opacity(0.3))
                         .frame(width: 9, height: 9)
                         .overlay(Rectangle().stroke(Theme.pixelBlack, lineWidth: 1.5))
                 }
             }
             Text("\(state.completedPomodoros) COMPLETED TODAY")
                 .font(PixelFont.font(size: 6))
-                .foregroundStyle(Theme.cream.opacity(0.75))
+                .foregroundStyle(theme.paper.opacity(0.75))
         }
     }
 }

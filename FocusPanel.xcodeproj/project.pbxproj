@@ -10,6 +10,7 @@
 		022CEF8CF8E11AB09BC337F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D3BA26BD4DBC4D443F550C3 /* AppDelegate.swift */; };
 		02E18F13F5DC453A142F1D92 /* SessionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44031138EC05E2EA5F3F288A /* SessionAlert.swift */; };
 		052C9DADEF3ED97ED52D4196 /* PixelFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C074B782274D59EDBFA2F67 /* PixelFont.swift */; };
+		10E9D92787725E5AF38E91AA /* IntroAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46BB64DD8F1FBE88035F5D7 /* IntroAnimation.swift */; };
 		13360C13F27ECF854B54B582 /* TimerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDF57EB8372150AB9585783 /* TimerCard.swift */; };
 		1860E4392A8EF3AE7E71DF0F /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F116B6D91EF9C44BF81DCA7 /* AppState.swift */; };
 		1A4ECF04042B4F86F0664A63 /* FocusPanelCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC88B733B5A0868F22737F38 /* FocusPanelCoreTests.swift */; };
@@ -26,6 +27,7 @@
 		C1ABBCE07BE5923BCE9898F0 /* SettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D0CBCB2FA8F8DE44CD3113 /* SettingsPane.swift */; };
 		C20AB38BD0760B0B615A3231 /* TodoPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30629FEEAB012B13C4770BA2 /* TodoPane.swift */; };
 		C7E3277EBDAD6B8DB86C82DF /* PomodoroEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A438F82B50259E6E19C737 /* PomodoroEngine.swift */; };
+		D67D5B397B5C7D856E4BA771 /* PixelTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE87D71C505BB0E4285A1B69 /* PixelTheme.swift */; };
 		DB49D6C8B7CA6975F9BF6164 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0806837DEA6D1E488528D90 /* main.swift */; };
 		E2EF0B502270AB8A23DF83F7 /* TimeFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD72DEB15BA1BB26A4FB2C2E /* TimeFormat.swift */; };
 		F657CD0BC150C2927F82408B /* libFocusPanelCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98B7F8AC439A4BA7C02AF48F /* libFocusPanelCore.a */; };
@@ -72,6 +74,8 @@
 		D20FD72569B077D14898A829 /* PixelControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelControls.swift; sourceTree = "<group>"; };
 		DD71A2A1B2D88FC6744256B9 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		E28DECD6071388C8FAEAE7E4 /* FocusPanelCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocusPanelCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E46BB64DD8F1FBE88035F5D7 /* IntroAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroAnimation.swift; sourceTree = "<group>"; };
+		EE87D71C505BB0E4285A1B69 /* PixelTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelTheme.swift; sourceTree = "<group>"; };
 		F9908CCEA3DAC79C64BF39FC /* SessionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionType.swift; sourceTree = "<group>"; };
 		FD72DEB15BA1BB26A4FB2C2E /* TimeFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormat.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,6 +109,7 @@
 				C0806837DEA6D1E488528D90 /* main.swift */,
 				CC2D117B468B8718AD31D01C /* Persistence.swift */,
 				0C074B782274D59EDBFA2F67 /* PixelFont.swift */,
+				EE87D71C505BB0E4285A1B69 /* PixelTheme.swift */,
 				44031138EC05E2EA5F3F288A /* SessionAlert.swift */,
 				DD71A2A1B2D88FC6744256B9 /* Theme.swift */,
 				A41F45712C30BEDE2E7F979A /* Resources */,
@@ -144,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				CE9008887F74EAA0E513618C /* ContentView.swift */,
+				E46BB64DD8F1FBE88035F5D7 /* IntroAnimation.swift */,
 				D20FD72569B077D14898A829 /* PixelControls.swift */,
 				A7D0CBCB2FA8F8DE44CD3113 /* SettingsPane.swift */,
 				1BDF57EB8372150AB9585783 /* TimerCard.swift */,
@@ -356,9 +362,11 @@
 				022CEF8CF8E11AB09BC337F7 /* AppDelegate.swift in Sources */,
 				1860E4392A8EF3AE7E71DF0F /* AppState.swift in Sources */,
 				7E5D2ED35D6B964934CE26C5 /* ContentView.swift in Sources */,
+				10E9D92787725E5AF38E91AA /* IntroAnimation.swift in Sources */,
 				A0A3F40AFB56A21E234CCAA9 /* Persistence.swift in Sources */,
 				B6D3B0DAD7C86C986114B642 /* PixelControls.swift in Sources */,
 				052C9DADEF3ED97ED52D4196 /* PixelFont.swift in Sources */,
+				D67D5B397B5C7D856E4BA771 /* PixelTheme.swift in Sources */,
 				02E18F13F5DC453A142F1D92 /* SessionAlert.swift in Sources */,
 				C1ABBCE07BE5923BCE9898F0 /* SettingsPane.swift in Sources */,
 				7243EA16ABC0EFD81B6A7574 /* Theme.swift in Sources */,
