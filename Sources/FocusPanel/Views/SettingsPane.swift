@@ -1,7 +1,8 @@
 import SwiftUI
 import FocusPanelCore
 
-/// Compact settings popover: durations, long-break interval, and toggles.
+/// Compact settings popover: durations, long-break interval, and toggles —
+/// pixel-console styled to match the rest of the panel.
 struct SettingsPane: View {
     @EnvironmentObject var state: AppState
     @Environment(\.dismiss) private var dismiss
@@ -16,55 +17,46 @@ struct SettingsPane: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Label("Settings", systemImage: "slider.horizontal.3")
-                    .font(.headline)
+                Text("SETTINGS")
+                    .font(PixelFont.font(size: 9))
                     .foregroundStyle(.white)
                 Spacer()
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.white.opacity(0.5))
-                }
-                .buttonStyle(.plain)
+                PixelIconButton(systemImage: "xmark") { dismiss() }
             }
 
-            stepper("Focus", value: $work, range: 1...180, accent: Theme.accent(for: .work), unit: "min")
-            stepper("Short break", value: $short, range: 1...180, accent: Theme.accent(for: .shortBreak), unit: "min")
-            stepper("Long break", value: $long, range: 1...180, accent: Theme.accent(for: .longBreak), unit: "min")
-            stepper("Long break every", value: $interval, range: 2...12, accent: Color(hex: 0xF7B733), unit: "focus")
+            stepper("FOCUS", value: $work, range: 1...180, accent: Theme.accent(for: .work), unit: "min")
+            stepper("SHORT BREAK", value: $short, range: 1...180, accent: Theme.accent(for: .shortBreak), unit: "min")
+            stepper("LONG BREAK", value: $long, range: 1...180, accent: Theme.accent(for: .longBreak), unit: "min")
+            stepper("LONG BREAK EVERY", value: $interval, range: 2...12, accent: Theme.caseAmberLight, unit: "focus")
 
             Toggle("Auto-start next session", isOn: $autoStart)
                 .tint(Theme.accent(for: .work))
                 .foregroundStyle(.white.opacity(0.85))
-                .font(.callout)
+                .font(.system(size: 12))
             Toggle("Chime when a session ends", isOn: $playSound)
                 .tint(Theme.accent(for: .work))
                 .foregroundStyle(.white.opacity(0.85))
-                .font(.callout)
+                .font(.system(size: 12))
 
-            Button(action: apply) {
-                Text("Save")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 9)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Theme.gradient(for: .work)))
+            PixelButton(label: "SAVE", tint: Theme.accent(for: .work)) {
+                apply()
             }
-            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity)
         }
         .padding(18)
         .frame(width: 300)
-        .background(Theme.windowBackground)
+        .background(Theme.screenGreen)
         .onAppear(perform: load)
     }
 
     private func stepper(_ label: String, value: Binding<Double>, range: ClosedRange<Double>, accent: Color, unit: String) -> some View {
         HStack {
             Text(label)
-                .font(.callout)
+                .font(PixelFont.font(size: 7))
                 .foregroundStyle(.white.opacity(0.85))
             Spacer()
             Text("\(Int(value.wrappedValue)) \(unit)")
-                .font(.callout.weight(.semibold).monospacedDigit())
+                .font(.system(size: 12, weight: .semibold, design: .monospaced))
                 .foregroundStyle(accent)
                 .frame(minWidth: 62, alignment: .trailing)
             Stepper("", value: value, in: range, step: 1)

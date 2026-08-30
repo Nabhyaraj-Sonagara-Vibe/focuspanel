@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		022CEF8CF8E11AB09BC337F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D3BA26BD4DBC4D443F550C3 /* AppDelegate.swift */; };
 		02E18F13F5DC453A142F1D92 /* SessionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44031138EC05E2EA5F3F288A /* SessionAlert.swift */; };
+		052C9DADEF3ED97ED52D4196 /* PixelFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C074B782274D59EDBFA2F67 /* PixelFont.swift */; };
 		13360C13F27ECF854B54B582 /* TimerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDF57EB8372150AB9585783 /* TimerCard.swift */; };
 		1860E4392A8EF3AE7E71DF0F /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F116B6D91EF9C44BF81DCA7 /* AppState.swift */; };
 		1A4ECF04042B4F86F0664A63 /* FocusPanelCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC88B733B5A0868F22737F38 /* FocusPanelCoreTests.swift */; };
@@ -18,7 +19,9 @@
 		7243EA16ABC0EFD81B6A7574 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD71A2A1B2D88FC6744256B9 /* Theme.swift */; };
 		7E5D2ED35D6B964934CE26C5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9008887F74EAA0E513618C /* ContentView.swift */; };
 		86D6ED66BB07EBCF0AAA16A3 /* PomodoroSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A86BB9D61ED223AA683523 /* PomodoroSettings.swift */; };
+		970674D4864780C4286D4187 /* PressStart2P-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67CA77D3875032F1BEC1D296 /* PressStart2P-Regular.ttf */; };
 		A0A3F40AFB56A21E234CCAA9 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2D117B468B8718AD31D01C /* Persistence.swift */; };
+		B6D3B0DAD7C86C986114B642 /* PixelControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20FD72569B077D14898A829 /* PixelControls.swift */; };
 		BCC7F557EFD0FA5BBF52B173 /* SessionPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12624ADC9E451DA265393C6 /* SessionPlanner.swift */; };
 		C1ABBCE07BE5923BCE9898F0 /* SettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D0CBCB2FA8F8DE44CD3113 /* SettingsPane.swift */; };
 		C20AB38BD0760B0B615A3231 /* TodoPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30629FEEAB012B13C4770BA2 /* TodoPane.swift */; };
@@ -49,12 +52,14 @@
 		00A86BB9D61ED223AA683523 /* PomodoroSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroSettings.swift; sourceTree = "<group>"; };
 		0248CF04D6E3E8D687F510BB /* focuspanel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = focuspanel; path = .; sourceTree = SOURCE_ROOT; };
 		05901FBF5878B264A2222486 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0C074B782274D59EDBFA2F67 /* PixelFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelFont.swift; sourceTree = "<group>"; };
 		1A2828F1F2F6A3411070062C /* FocusPanel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusPanel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDF57EB8372150AB9585783 /* TimerCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCard.swift; sourceTree = "<group>"; };
 		1D3BA26BD4DBC4D443F550C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1D68E964C674D14C9E0E5EB4 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		30629FEEAB012B13C4770BA2 /* TodoPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoPane.swift; sourceTree = "<group>"; };
 		44031138EC05E2EA5F3F288A /* SessionAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAlert.swift; sourceTree = "<group>"; };
+		67CA77D3875032F1BEC1D296 /* PressStart2P-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PressStart2P-Regular.ttf"; sourceTree = "<group>"; };
 		6F116B6D91EF9C44BF81DCA7 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		98B7F8AC439A4BA7C02AF48F /* libFocusPanelCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFocusPanelCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7D0CBCB2FA8F8DE44CD3113 /* SettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPane.swift; sourceTree = "<group>"; };
@@ -64,6 +69,7 @@
 		C4A438F82B50259E6E19C737 /* PomodoroEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroEngine.swift; sourceTree = "<group>"; };
 		CC2D117B468B8718AD31D01C /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		CE9008887F74EAA0E513618C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D20FD72569B077D14898A829 /* PixelControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelControls.swift; sourceTree = "<group>"; };
 		DD71A2A1B2D88FC6744256B9 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		E28DECD6071388C8FAEAE7E4 /* FocusPanelCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FocusPanelCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9908CCEA3DAC79C64BF39FC /* SessionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionType.swift; sourceTree = "<group>"; };
@@ -98,8 +104,10 @@
 				05901FBF5878B264A2222486 /* Info.plist */,
 				C0806837DEA6D1E488528D90 /* main.swift */,
 				CC2D117B468B8718AD31D01C /* Persistence.swift */,
+				0C074B782274D59EDBFA2F67 /* PixelFont.swift */,
 				44031138EC05E2EA5F3F288A /* SessionAlert.swift */,
 				DD71A2A1B2D88FC6744256B9 /* Theme.swift */,
+				A41F45712C30BEDE2E7F979A /* Resources */,
 				8B48456021C425083E323D3E /* Views */,
 			);
 			path = FocusPanel;
@@ -136,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				CE9008887F74EAA0E513618C /* ContentView.swift */,
+				D20FD72569B077D14898A829 /* PixelControls.swift */,
 				A7D0CBCB2FA8F8DE44CD3113 /* SettingsPane.swift */,
 				1BDF57EB8372150AB9585783 /* TimerCard.swift */,
 				30629FEEAB012B13C4770BA2 /* TodoPane.swift */,
@@ -149,6 +158,14 @@
 				BC88B733B5A0868F22737F38 /* FocusPanelCoreTests.swift */,
 			);
 			path = FocusPanelCoreTests;
+			sourceTree = "<group>";
+		};
+		A41F45712C30BEDE2E7F979A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				67CA77D3875032F1BEC1D296 /* PressStart2P-Regular.ttf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		B3364A5F0B0067ED14A6D8EE /* Products */ = {
@@ -208,6 +225,7 @@
 			buildConfigurationList = 37579D4B1708CB82FC662621 /* Build configuration list for PBXNativeTarget "FocusPanel" */;
 			buildPhases = (
 				DCB6E6D5355ACD4786858E9E /* Sources */,
+				6423DD596F999CBB1D1C038E /* Resources */,
 				380BF9F2908C856BC868E491 /* Frameworks */,
 			);
 			buildRules = (
@@ -279,6 +297,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		6423DD596F999CBB1D1C038E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				970674D4864780C4286D4187 /* PressStart2P-Regular.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXShellScriptBuildPhase section */
 		93709283CE9252A8B4DDE290 /* Copy Swift Objective-C Interface Header */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -328,6 +357,8 @@
 				1860E4392A8EF3AE7E71DF0F /* AppState.swift in Sources */,
 				7E5D2ED35D6B964934CE26C5 /* ContentView.swift in Sources */,
 				A0A3F40AFB56A21E234CCAA9 /* Persistence.swift in Sources */,
+				B6D3B0DAD7C86C986114B642 /* PixelControls.swift in Sources */,
+				052C9DADEF3ED97ED52D4196 /* PixelFont.swift in Sources */,
 				02E18F13F5DC453A142F1D92 /* SessionAlert.swift in Sources */,
 				C1ABBCE07BE5923BCE9898F0 /* SettingsPane.swift in Sources */,
 				7243EA16ABC0EFD81B6A7574 /* Theme.swift in Sources */,

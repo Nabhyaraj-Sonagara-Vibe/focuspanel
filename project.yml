@@ -16,6 +16,8 @@ targets:
     deploymentTarget: "13.0"
     sources:
       - path: Sources/FocusPanel
+        excludes:
+          - "Resources/*.txt"
     dependencies:
       - target: FocusPanelCore
     settings:

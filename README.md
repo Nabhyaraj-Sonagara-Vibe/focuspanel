@@ -30,10 +30,14 @@ taking over the screen.
 - **Integrated to-do list.** Add tasks, tick them off, delete them, clear
   completed — a slim scrollable checklist that shares the same small footprint via
   a **Timer / Tasks** segmented toggle.
-- **Colourful, session-aware UI.** Vibrant gradients that shift with the session
-  type — energetic coral/magenta for focus, calm mint for short breaks, cool
-  indigo for long breaks — with SF Symbols, rounded cards, and a soft dark
-  backdrop.
+- **Colourful, session-aware UI.** A retro cartridge-console look directly
+  inspired by Google's [Jerry Lawson Doodle](https://doodles.google/doodle/gerald-jerry-lawsons-82nd-birthday/)
+  (celebrating the Fairchild Channel F, the first cartridge-based home
+  console): a wood/amber console "case" framing a circuit-board-green
+  "screen", thick black pixel outlines, hard edges, flat primary-color
+  accents that shift per session (cartridge red for focus, circuit green for
+  short breaks, console blue for long breaks), and the bundled **Press
+  Start 2P** pixel font throughout.
 - **End-of-session alert.** A native macOS user notification and/or an `NSSound`
   chime.
 - **Persists across launches.** Settings, the completed tally, and your todos are

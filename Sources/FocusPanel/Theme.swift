@@ -1,32 +1,38 @@
 import SwiftUI
 import FocusPanelCore
 
-/// Colourful, session-aware palette. Work is energetic; breaks are calm.
+/// Retro pixel-console palette, directly inspired by Google's "Jerry Lawson"
+/// Doodle (celebrating the Fairchild Channel F, the first cartridge-based
+/// home console): a circuit-board green "screen", a wood/amber console
+/// casing, thick black pixel outlines, and flat, primary-color accent
+/// buttons rather than smooth gradients — pixel art avoids anti-aliased
+/// blends in favor of hard edges and light/dark bevels.
 enum Theme {
-    /// Gradient used for the timer card / progress ring per session type.
-    static func gradient(for session: SessionType) -> LinearGradient {
-        LinearGradient(colors: colors(for: session),
-                       startPoint: .topLeading,
-                       endPoint: .bottomTrailing)
-    }
 
-    static func colors(for session: SessionType) -> [Color] {
+    // MARK: - Session accent (flat pixel-art primaries + their bevel tones)
+
+    static func accent(for session: SessionType) -> Color {
         switch session {
-        case .work:
-            // Energetic sunset: coral -> pink -> magenta
-            return [Color(hex: 0xFF6B6B), Color(hex: 0xFF3D7F), Color(hex: 0xC724B1)]
-        case .shortBreak:
-            // Calm mint: teal -> green
-            return [Color(hex: 0x2AF598), Color(hex: 0x08AEEA)]
-        case .longBreak:
-            // Cool focus recovery: indigo -> violet
-            return [Color(hex: 0x667EEA), Color(hex: 0x764BA2), Color(hex: 0x6B2FB3)]
+        case .work: return Color(hex: 0xEA4335)        // cartridge red
+        case .shortBreak: return Color(hex: 0x34A853)  // circuit green
+        case .longBreak: return Color(hex: 0x4285F4)   // console blue
         }
     }
 
-    /// The single accent colour for a session (used for tints and icons).
-    static func accent(for session: SessionType) -> Color {
-        colors(for: session).first ?? .accentColor
+    static func accentLight(for session: SessionType) -> Color {
+        switch session {
+        case .work: return Color(hex: 0xFF7A6B)
+        case .shortBreak: return Color(hex: 0x6FE39A)
+        case .longBreak: return Color(hex: 0x83B4FF)
+        }
+    }
+
+    static func accentDark(for session: SessionType) -> Color {
+        switch session {
+        case .work: return Color(hex: 0x9A241A)
+        case .shortBreak: return Color(hex: 0x1E7A38)
+        case .longBreak: return Color(hex: 0x1F4FA8)
+        }
     }
 
     static func symbol(for session: SessionType) -> String {
@@ -37,10 +43,20 @@ enum Theme {
         }
     }
 
-    /// Soft app background.
-    static let windowBackground = LinearGradient(
-        colors: [Color(hex: 0x1A1A2E), Color(hex: 0x16213E)],
-        startPoint: .top, endPoint: .bottom)
+    // MARK: - Console chrome
+
+    /// Wood/amber cartridge-console casing.
+    static let caseAmber = Color(hex: 0xC77B3D)
+    static let caseAmberLight = Color(hex: 0xE6A868)
+    static let caseAmberDark = Color(hex: 0x7A431E)
+
+    /// Circuit-board green screen the timer/tasks sit on.
+    static let screenGreen = Color(hex: 0x1B7A34)
+    static let screenGreenLight = Color(hex: 0x2FA84C)
+    static let screenGreenDark = Color(hex: 0x0E4A20)
+
+    static let pixelBlack = Color(hex: 0x151109)
+    static let cream = Color(hex: 0xF5E6C8)
 }
 
 extension Color {

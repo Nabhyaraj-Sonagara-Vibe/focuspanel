@@ -29,12 +29,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panel.contentView = hosting
         panel.title = "FocusPanel"
 
-        // Chromeless, translucent title bar so our gradient reaches the top.
+        // Chromeless title bar so our pixel-console chrome reaches the top.
         panel.titlebarAppearsTransparent = true
         panel.titleVisibility = .hidden
-        panel.isMovableByWindowBackground = true
+
+        // BUG FIX: whole-window background dragging was stealing clicks from
+        // SwiftUI buttons. AppKit's `isMovableByWindowBackground` drags the
+        // window on *any* mouseDown that a hit-tested view doesn't explicitly
+        // claim, and with `isOpaque = false` that included the todo rows'
+        // translucent backgrounds and icon-only toggle/delete buttons — a
+        // quick tap could register as a sub-pixel drag instead of a click,
+        // making the whole Tasks pane feel unresponsive. We now drag only via
+        // an explicit handle (the title bar), so every button in the content
+        // area reliably receives its click.
+        panel.isMovableByWindowBackground = false
         panel.backgroundColor = NSColor(red: 0.10, green: 0.10, blue: 0.18, alpha: 1.0)
-        panel.isOpaque = false
+        panel.isOpaque = true
 
         // THE key requirement: float above other apps while the user works.
         panel.level = .floating

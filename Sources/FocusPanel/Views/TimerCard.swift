@@ -1,109 +1,104 @@
 import SwiftUI
 import FocusPanelCore
 
-/// The always-visible compact timer at the top of the panel: session badge,
-/// circular progress ring with the big countdown, and primary transport.
+/// The always-visible compact timer: session badge, a chunky pixel-ring
+/// progress indicator built from discrete blocks (not a smooth stroke), and
+/// primary transport — all in the console's hard-edged, flat-color style.
 struct TimerCard: View {
     @EnvironmentObject var state: AppState
 
     var body: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 12) {
             sessionBadge
-
-            ZStack {
-                Circle()
-                    .stroke(Color.white.opacity(0.12), lineWidth: 12)
-
-                Circle()
-                    .trim(from: 0, to: CGFloat(state.progress))
-                    .stroke(Theme.gradient(for: state.session),
-                            style: StrokeStyle(lineWidth: 12, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                    .animation(.easeInOut(duration: 0.3), value: state.progress)
-
-                VStack(spacing: 2) {
-                    Text(state.clock)
-                        .font(.system(size: 44, weight: .bold, design: .rounded))
-                        .monospacedDigit()
-                        .foregroundStyle(.white)
-                    Text(state.isRunning ? "in progress" : "paused")
-                        .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.55))
-                }
-            }
-            .frame(width: 176, height: 176)
-            .padding(.vertical, 2)
-
+            pixelRing
             transport
             cycleIndicator
         }
     }
 
     private var sessionBadge: some View {
-        HStack(spacing: 7) {
+        HStack(spacing: 6) {
             Image(systemName: Theme.symbol(for: state.session))
+                .font(.system(size: 11, weight: .bold))
             Text(state.sessionTitle.uppercased())
-                .fontWeight(.semibold)
-                .tracking(1.5)
+                .font(PixelFont.font(size: 9))
         }
-        .font(.caption)
         .foregroundStyle(.white)
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 10)
         .padding(.vertical, 6)
-        .background(
-            Capsule().fill(Theme.gradient(for: state.session))
-        )
-        .shadow(color: state.accent.opacity(0.5), radius: 8, y: 2)
+        .background(state.accent)
+        .overlay(Rectangle().stroke(Theme.pixelBlack, lineWidth: 2))
+    }
+
+    /// A ring of small square "pixels" that fill in clockwise as the session
+    /// progresses — echoes the blocky, non-anti-aliased shapes in the Doodle
+    /// rather than a smooth circular stroke.
+    private var pixelRing: some View {
+        let segments = 32
+        let filled = Int(Double(segments) * state.progress)
+
+        return ZStack {
+            PixelPanel(fill: Theme.screenGreenDark) {
+                Color.clear.frame(width: 170, height: 170)
+            }
+
+            ForEach(0..<segments, id: \.self) { i in
+                let angle = Angle(degrees: Double(i) / Double(segments) * 360 - 90)
+                Rectangle()
+                    .fill(i < filled ? state.accent : Theme.pixelBlack.opacity(0.3))
+                    .frame(width: 8, height: 8)
+                    .offset(y: -76)
+                    .rotationEffect(angle)
+                    .animation(.easeInOut(duration: 0.2), value: filled)
+            }
+
+            VStack(spacing: 4) {
+                Text(state.clock)
+                    .font(PixelFont.font(size: 26))
+                    .foregroundStyle(.white)
+                Text(state.isRunning ? "RUNNING" : "PAUSED")
+                    .font(PixelFont.font(size: 7))
+                    .foregroundStyle(Theme.cream.opacity(0.7))
+            }
+        }
+        .frame(width: 176, height: 176)
     }
 
     private var transport: some View {
-        HStack(spacing: 22) {
-            controlButton(system: "arrow.counterclockwise", size: 18) { state.reset() }
-                .help("Reset current session")
-
-            Button(action: { state.toggleRunning() }) {
-                ZStack {
-                    Circle().fill(Theme.gradient(for: state.session))
-                        .frame(width: 60, height: 60)
-                        .shadow(color: state.accent.opacity(0.6), radius: 10, y: 3)
-                    Image(systemName: state.isRunning ? "pause.fill" : "play.fill")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundStyle(.white)
-                        .offset(x: state.isRunning ? 0 : 2)
-                }
+        HStack(spacing: 14) {
+            PixelButton(systemImage: "arrow.counterclockwise", tint: Theme.caseAmberDark) {
+                state.reset()
             }
-            .buttonStyle(.plain)
+            .help("Reset current session")
+
+            PixelButton(
+                systemImage: state.isRunning ? "pause.fill" : "play.fill",
+                tint: state.accent
+            ) {
+                state.toggleRunning()
+            }
             .help(state.isRunning ? "Pause" : "Start")
 
-            controlButton(system: "forward.fill", size: 18) { state.skip() }
-                .help("Skip to next session")
+            PixelButton(systemImage: "forward.fill", tint: Theme.caseAmberDark) {
+                state.skip()
+            }
+            .help("Skip to next session")
         }
     }
 
     private var cycleIndicator: some View {
-        VStack(spacing: 5) {
-            HStack(spacing: 6) {
+        VStack(spacing: 6) {
+            HStack(spacing: 5) {
                 ForEach(Array(state.cycleDots.enumerated()), id: \.offset) { _, filled in
-                    Circle()
-                        .fill(filled ? AnyShapeStyle(Theme.gradient(for: .work))
-                                     : AnyShapeStyle(Color.white.opacity(0.18)))
-                        .frame(width: 8, height: 8)
+                    Rectangle()
+                        .fill(filled ? Theme.accent(for: .work) : Theme.pixelBlack.opacity(0.3))
+                        .frame(width: 9, height: 9)
+                        .overlay(Rectangle().stroke(Theme.pixelBlack, lineWidth: 1.5))
                 }
             }
-            Text("\(state.completedPomodoros) completed today")
-                .font(.caption2)
-                .foregroundStyle(.white.opacity(0.5))
+            Text("\(state.completedPomodoros) COMPLETED TODAY")
+                .font(PixelFont.font(size: 6))
+                .foregroundStyle(Theme.cream.opacity(0.75))
         }
-    }
-
-    private func controlButton(system: String, size: CGFloat, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(systemName: system)
-                .font(.system(size: size, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.85))
-                .frame(width: 40, height: 40)
-                .background(Circle().fill(Color.white.opacity(0.08)))
-        }
-        .buttonStyle(.plain)
     }
 }
