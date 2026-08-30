@@ -250,4 +250,56 @@ final class FocusPanelCoreTests: XCTestCase {
         let decoded = try JSONDecoder().decode(TodoList.self, from: data)
         XCTAssertEqual(decoded, list)
     }
+
+    // MARK: - Settings theme + backward-compatible decoding
+
+    func testSettingsDefaultThemeID() {
+        XCTAssertEqual(PomodoroSettings.default.themeID, PomodoroSettings.defaultThemeID)
+    }
+
+    func testSettingsThemeIDRoundTrips() throws {
+        let s = PomodoroSettings(workMinutes: 30, themeID: "synthwave")
+        let data = try JSONEncoder().encode(s)
+        let decoded = try JSONDecoder().decode(PomodoroSettings.self, from: data)
+        XCTAssertEqual(decoded.themeID, "synthwave")
+        XCTAssertEqual(decoded, s)
+    }
+
+    /// Settings JSON written by an OLDER build had no `themeID` field. Decoding
+    /// it must succeed and fall back to the default theme, NOT throw and wipe
+    /// the user's saved durations.
+    func testSettingsDecodesLegacyJSONWithoutThemeID() throws {
+        let legacyJSON = """
+        {
+          "workMinutes": 45,
+          "shortBreakMinutes": 7,
+          "longBreakMinutes": 20,
+          "longBreakInterval": 3,
+          "autoStartNext": false,
+          "playSound": true
+        }
+        """.data(using: .utf8)!
+
+        let decoded = try JSONDecoder().decode(PomodoroSettings.self, from: legacyJSON)
+        XCTAssertEqual(decoded.workMinutes, 45)
+        XCTAssertEqual(decoded.shortBreakMinutes, 7)
+        XCTAssertEqual(decoded.longBreakMinutes, 20)
+        XCTAssertEqual(decoded.longBreakInterval, 3)
+        XCTAssertFalse(decoded.autoStartNext)
+        XCTAssertTrue(decoded.playSound)
+        // The crucial part: missing themeID -> default, not a decode failure.
+        XCTAssertEqual(decoded.themeID, PomodoroSettings.defaultThemeID)
+    }
+
+    func testSettingsClampPreservesThemeID() {
+        let s = PomodoroSettings(workMinutes: 9999, themeID: "gameBoy").clamped()
+        XCTAssertEqual(s.workMinutes, PomodoroSettings.maxMinutes)
+        XCTAssertEqual(s.themeID, "gameBoy") // clamp must not drop the theme
+    }
+
+    func testEngineUpdateSettingsPreservesThemeID() {
+        let engine = PomodoroEngine(settings: .default)
+        engine.updateSettings(PomodoroSettings(workMinutes: 40, themeID: "arcade"))
+        XCTAssertEqual(engine.settings.themeID, "arcade")
+    }
 }

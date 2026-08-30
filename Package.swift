@@ -20,7 +20,8 @@ let package = Package(
         // Xcode project.
         .executableTarget(
             name: "FocusPanel",
-            dependencies: ["FocusPanelCore"]
+            dependencies: ["FocusPanelCore"],
+            resources: [.copy("Resources/PressStart2P-Regular.ttf")]
         ),
         .testTarget(
             name: "FocusPanelCoreTests",

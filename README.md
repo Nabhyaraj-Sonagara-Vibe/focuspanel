@@ -2,8 +2,7 @@
 
 A colourful, native **macOS Pomodoro timer with an integrated to-do list**, packed
 into a compact, always-on-top floating window you tuck into a screen corner and
-work alongside. Built in **Swift + SwiftUI/AppKit**, no Xcode project required —
-it builds, tests, and runs straight from Swift Package Manager.
+work alongside. Built in **Swift + SwiftUI/AppKit**.
 
 <!-- Screenshots optional; add under docs/ if desired. -->
 
@@ -18,90 +17,112 @@ taking over the screen.
 
 ## What it does
 
-- **Compact, always-on-top floating window.** A slim 300 pt-wide panel set to
-  `NSWindow.level = .floating`, so it stays visible above other apps while you
-  work. Fixed, widget-like footprint (not resizable, not fullscreen), parked in
-  the top-right corner by default and draggable anywhere by its background.
+- **Compact, always-on-top floating window.** A slim 300 pt-wide panel
+  implemented as a non-activating floating `NSPanel`, so it stays visible
+  above other apps *while you keep working in them* — it doesn't get hidden
+  when another app becomes active, and rides along across Spaces and over
+  full-screen apps. Fixed, widget-like footprint (not resizable, not
+  fullscreen), parked in the top-right corner by default and draggable by
+  its title bar.
 - **Full Pomodoro cycle.** Configurable work / short-break / long-break durations
   (defaults 25 / 5 / 15 min), auto-cycling (work → short break, with a long break
-  on every 4th focus session), a big readable countdown with a circular progress
-  ring, and **pause / resume / reset / skip** controls.
+  on every 4th focus session), a big readable countdown with a blocky pixel
+  progress ring, and **pause / resume / reset / skip** controls.
 - **Completed-pomodoro tally & cycle dots** show your progress toward the next
   long break and how many focus sessions you've finished.
 - **Integrated to-do list.** Add tasks, tick them off, delete them, clear
   completed — a slim scrollable checklist that shares the same small footprint via
   a **Timer / Tasks** segmented toggle.
-- **Colourful, session-aware UI.** Vibrant gradients that shift with the session
-  type — energetic coral/magenta for focus, calm mint for short breaks, cool
-  indigo for long breaks — with SF Symbols, rounded cards, and a soft dark
-  backdrop.
-- **End-of-session alert.** A native macOS user notification (when run as a
-  bundled `.app`) and/or an `NSSound` chime.
-- **Persists across launches.** Settings, the completed tally, and your todos are
-  stored in `UserDefaults`.
+- **Customizable pixel-art themes.** A retro cartridge-console look inspired by
+  Google's [Jerry Lawson Doodle](https://doodles.google/doodle/gerald-jerry-lawsons-82nd-birthday/)
+  (celebrating the Fairchild Channel F, the first cartridge-based home
+  console): a console "case" framing a circuit-board "screen", thick black
+  pixel outlines, hard edges, flat per-session accent colours, and the
+  bundled **Press Start 2P** pixel font throughout. Pick from four built-in
+  themes in Settings — **Channel F** (the original wood-and-green Doodle
+  look), **Game Boy** (4-tone DMG green), **Synthwave** (neon on deep
+  purple), and **Arcade** (bright cabinet primaries on black). Your choice
+  is saved across launches.
+- **Pixel boot animation.** A short one-time "power-on" intro when the panel
+  launches (a CRT scan-line sweep + cartridge-style title flicker), which
+  respects the system **Reduce Motion** setting.
+- **End-of-session alert.** A native macOS user notification and/or an `NSSound`
+  chime.
+- **Persists across launches.** Settings (including your theme), the completed
+  tally, and your todos are stored in `UserDefaults`.
 - **100% local.** No network calls, no accounts, no paid or external dependencies —
   Foundation / SwiftUI / AppKit / UserNotifications only.
 
 ## Architecture
 
-The project is a Swift package with a clean split so the logic is testable from
-the command line:
+The project is a proper **Xcode project** (`FocusPanel.xcodeproj`), generated
+and kept in sync from a checked-in [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+spec (`project.yml`) rather than hand-edited — so the project file itself never
+needs manual merge-conflict surgery, and anyone can regenerate it identically.
+Under the hood it's still a clean two-target split so the logic is independently
+testable:
 
-- **`FocusPanelCore`** — a pure, UI-free library: the Pomodoro state machine
-  (`PomodoroEngine`), cycle rules (`SessionPlanner`), settings + clamping
-  (`PomodoroSettings`), time formatting (`TimeFormat`), and the todo model
-  (`TodoList` / `TodoItem`). No SwiftUI/AppKit imports — fully unit-tested.
-- **`FocusPanel`** — the executable target: the SwiftUI views, the observable
+- **`FocusPanelCore`** — a pure, UI-free static library: the Pomodoro state
+  machine (`PomodoroEngine`), cycle rules (`SessionPlanner`), settings +
+  clamping (`PomodoroSettings`), time formatting (`TimeFormat`), and the todo
+  model (`TodoList` / `TodoItem`). No SwiftUI/AppKit imports — fully unit-tested.
+- **`FocusPanel`** — the app target: the SwiftUI views, the observable
   `AppState`, `UserDefaults` persistence, notifications, and an AppKit
   bootstrap (`main.swift` + `AppDelegate`) that creates the floating `NSWindow`.
-  A macOS SwiftUI app is launched from a SwiftPM executable target this way so it
-  builds and runs from the CLI without an `.xcodeproj`.
+  Ships with a real bundle identifier (`com.nabhyaraj.focuspanel`) and
+  `Info.plist`, so it behaves like a proper macOS app — Dock icon, Launch
+  Services registration, working notification permissions — not just a bare
+  command-line binary.
+- **`FocusPanelCoreTests`** — an XCTest bundle target exercising `FocusPanelCore`.
 
 ## Requirements
 
-- macOS 13 (Ventura) or later
-- A Swift 5.9+ toolchain. **Running the tests requires a full Xcode install**
-  (the XCTest framework ships with Xcode, not the standalone Command Line Tools).
-  `swift build` and `swift run` work with either.
+- macOS 13 (Ventura) or later.
+- **Xcode 15+** (full Xcode, not just Command Line Tools — XCTest and app
+  bundle code-signing both require it).
 
-## Build & run
+## Build & run (Xcode — primary path)
+
+1. Open `FocusPanel.xcodeproj` in Xcode.
+2. Select the **FocusPanel** scheme.
+3. Press **⌘R** to build and run. The floating panel opens in the top-right
+   corner of your screen.
+4. Press **⌘U** to run the test suite (26 tests, `FocusPanelCoreTests`).
+
+Or from the command line:
 
 ```bash
 # Build
-swift build
+xcodebuild -project FocusPanel.xcodeproj -scheme FocusPanel -destination 'platform=macOS' build
 
-# Run the app (opens the floating panel)
-swift run FocusPanel
+# Run the tests
+xcodebuild -project FocusPanel.xcodeproj -scheme FocusPanel -destination 'platform=macOS' test
 
-# Run the logic tests
-swift test
+# Launch the built app
+open ~/Library/Developer/Xcode/DerivedData/FocusPanel-*/Build/Products/Debug/FocusPanel.app
 ```
 
-> If you have Xcode installed but the Command Line Tools are the active
-> developer directory, point the toolchain at Xcode so `swift test` can find
-> XCTest:
->
-> ```bash
-> DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test
-> ```
+### Regenerating the Xcode project
 
-## Build a distributable `.app`
-
-`swift run` launches the binary directly. To get a proper double-clickable app
-bundle (with a bundle identifier, which also enables user notifications), use the
-helper script:
+The `.xcodeproj` is generated from `project.yml` via
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`) and
+is checked into the repo so you can open it immediately without a generation
+step. If you change `project.yml` (or add/remove source files), regenerate it:
 
 ```bash
-./scripts/make_app.sh
-open dist/FocusPanel.app
+xcodegen generate
 ```
 
-This builds a release binary and wraps it in `dist/FocusPanel.app` with a minimal
-`Info.plist`.
+### Building a Release archive
+
+```bash
+xcodebuild -project FocusPanel.xcodeproj -scheme FocusPanel -configuration Release -destination 'platform=macOS' build
+```
 
 ## Tests
 
-`swift test` runs the `FocusPanelCore` XCTest suite (26 tests) covering:
+The `FocusPanelCoreTests` XCTest suite (26 tests, run via ⌘U in Xcode or
+`xcodebuild test` above) covers:
 
 - Session-transition cycle logic, including the long break landing on the 4th
   focus session and custom long-break intervals.

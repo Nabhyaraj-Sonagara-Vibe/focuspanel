@@ -2,9 +2,11 @@ import SwiftUI
 import FocusPanelCore
 
 /// Compact, scrollable checklist that lives below the timer in the same slim
-/// footprint. Add a task, tick it off, delete it.
+/// footprint. Pixel-console styled with large, reliable hit targets, coloured
+/// by the active theme.
 struct TodoPane: View {
     @EnvironmentObject var state: AppState
+    @Environment(\.pixelTheme) private var theme
     @State private var newTitle: String = ""
     @FocusState private var inputFocused: Bool
 
@@ -20,32 +22,34 @@ struct TodoPane: View {
                     LazyVStack(spacing: 6) {
                         ForEach(state.todos.items) { item in
                             TodoRow(item: item,
+                                    accent: state.accent,
+                                    theme: theme,
                                     onToggle: { state.toggleTodo(item.id) },
                                     onDelete: { state.deleteTodo(item.id) })
                         }
                     }
                     .padding(.vertical, 2)
                 }
-                .frame(maxHeight: 180)
+                .frame(maxHeight: 220)
             }
         }
     }
 
     private var header: some View {
         HStack {
-            Label("Tasks", systemImage: "checklist")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.8))
+            Text("TASKS")
+                .font(PixelFont.font(size: 8))
+                .foregroundStyle(.white)
             Spacer()
             if state.todos.completedCount > 0 {
-                Button("Clear done") { state.clearCompletedTodos() }
+                Button("CLEAR") { state.clearCompletedTodos() }
                     .buttonStyle(.plain)
-                    .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.55))
+                    .font(PixelFont.font(size: 6))
+                    .foregroundStyle(theme.paper.opacity(0.7))
             }
-            Text("\(state.todos.remainingCount) left")
-                .font(.caption2)
-                .foregroundStyle(.white.opacity(0.45))
+            Text("\(state.todos.remainingCount) LEFT")
+                .font(PixelFont.font(size: 6))
+                .foregroundStyle(theme.paper.opacity(0.6))
         }
     }
 
@@ -53,22 +57,19 @@ struct TodoPane: View {
         HStack(spacing: 8) {
             TextField("Add a task…", text: $newTitle)
                 .textFieldStyle(.plain)
-                .font(.callout)
-                .foregroundStyle(.white)
+                .font(.system(size: 12))
+                .foregroundStyle(Theme.pixelBlack)
                 .focused($inputFocused)
                 .onSubmit(commit)
                 .padding(.horizontal, 10)
-                .padding(.vertical, 8)
-                .background(RoundedRectangle(cornerRadius: 9).fill(Color.white.opacity(0.08)))
+                .padding(.vertical, 9)
+                .background(theme.paper)
+                .overlay(Rectangle().stroke(Theme.pixelBlack, lineWidth: 2))
 
-            Button(action: commit) {
-                Image(systemName: "plus")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(.white)
-                    .frame(width: 34, height: 34)
-                    .background(RoundedRectangle(cornerRadius: 9).fill(Theme.gradient(for: .work)))
+            PixelButton(systemImage: "plus", tint: state.accent) {
+                commit()
             }
-            .buttonStyle(.plain)
+            .opacity(newTitle.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
             .disabled(newTitle.trimmingCharacters(in: .whitespaces).isEmpty)
         }
     }
@@ -77,10 +78,10 @@ struct TodoPane: View {
         VStack(spacing: 6) {
             Image(systemName: "sparkles")
                 .font(.title2)
-                .foregroundStyle(Theme.gradient(for: .shortBreak))
-            Text("No tasks yet")
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.5))
+                .foregroundStyle(theme.paper.opacity(0.6))
+            Text("NO TASKS YET")
+                .font(PixelFont.font(size: 7))
+                .foregroundStyle(theme.paper.opacity(0.6))
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 22)
@@ -95,42 +96,36 @@ struct TodoPane: View {
 
 private struct TodoRow: View {
     let item: TodoItem
+    let accent: Color
+    let theme: PixelTheme
     let onToggle: () -> Void
     let onDelete: () -> Void
-    @State private var hovering = false
 
     var body: some View {
         HStack(spacing: 10) {
-            Button(action: onToggle) {
-                Image(systemName: item.isDone ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 17))
-                    .foregroundStyle(item.isDone
-                                     ? AnyShapeStyle(Theme.gradient(for: .shortBreak))
-                                     : AnyShapeStyle(Color.white.opacity(0.4)))
-            }
-            .buttonStyle(.plain)
+            // Full 32x32 hit area (see PixelControls.swift) — reliably tappable.
+            PixelCheckbox(isChecked: item.isDone, accent: accent, action: onToggle)
 
             Text(item.title)
-                .font(.callout)
-                .foregroundStyle(item.isDone ? .white.opacity(0.4) : .white.opacity(0.9))
-                .strikethrough(item.isDone, color: .white.opacity(0.4))
+                .font(.system(size: 12))
+                .foregroundStyle(item.isDone ? theme.paper.opacity(0.45) : .white)
+                .strikethrough(item.isDone, color: .white.opacity(0.5))
                 .lineLimit(2)
 
             Spacer(minLength: 4)
 
-            if hovering {
-                Button(action: onDelete) {
-                    Image(systemName: "trash")
-                        .font(.system(size: 12))
-                        .foregroundStyle(.white.opacity(0.55))
-                }
-                .buttonStyle(.plain)
+            // Always visible (not hover-only), so its position never shifts
+            // out from under a tap.
+            PixelIconButton(systemImage: "trash", action: onDelete)
                 .help("Delete task")
-            }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
-        .background(RoundedRectangle(cornerRadius: 9).fill(Color.white.opacity(hovering ? 0.10 : 0.05)))
-        .onHover { hovering = $0 }
+        .background(item.isDone ? theme.screenDark.opacity(0.6) : theme.screenLight.opacity(0.35))
+        .overlay(Rectangle().stroke(Theme.pixelBlack.opacity(0.4), lineWidth: 1.5))
+        // Explicit hit-testable background for the whole row; with the window's
+        // drag gesture scoped to just the title bar, this row reliably receives
+        // its own clicks.
+        .contentShape(Rectangle())
     }
 }

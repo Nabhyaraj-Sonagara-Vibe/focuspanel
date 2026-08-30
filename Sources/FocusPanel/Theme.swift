@@ -1,34 +1,14 @@
 import SwiftUI
 import FocusPanelCore
 
-/// Colourful, session-aware palette. Work is energetic; breaks are calm.
+/// Static, theme-independent constants and the hex `Color` helper.
+///
+/// The actual palette (console casing, screen, per-session accents) now lives
+/// in `PixelTheme` / `ThemeCatalog` and is injected through the environment so
+/// it can be swapped at runtime. Only genuinely theme-agnostic pieces remain
+/// here.
 enum Theme {
-    /// Gradient used for the timer card / progress ring per session type.
-    static func gradient(for session: SessionType) -> LinearGradient {
-        LinearGradient(colors: colors(for: session),
-                       startPoint: .topLeading,
-                       endPoint: .bottomTrailing)
-    }
-
-    static func colors(for session: SessionType) -> [Color] {
-        switch session {
-        case .work:
-            // Energetic sunset: coral -> pink -> magenta
-            return [Color(hex: 0xFF6B6B), Color(hex: 0xFF3D7F), Color(hex: 0xC724B1)]
-        case .shortBreak:
-            // Calm mint: teal -> green
-            return [Color(hex: 0x2AF598), Color(hex: 0x08AEEA)]
-        case .longBreak:
-            // Cool focus recovery: indigo -> violet
-            return [Color(hex: 0x667EEA), Color(hex: 0x764BA2), Color(hex: 0x6B2FB3)]
-        }
-    }
-
-    /// The single accent colour for a session (used for tints and icons).
-    static func accent(for session: SessionType) -> Color {
-        colors(for: session).first ?? .accentColor
-    }
-
+    /// Session icon — the same glyph regardless of theme.
     static func symbol(for session: SessionType) -> String {
         switch session {
         case .work: return "bolt.fill"
@@ -37,10 +17,10 @@ enum Theme {
         }
     }
 
-    /// Soft app background.
-    static let windowBackground = LinearGradient(
-        colors: [Color(hex: 0x1A1A2E), Color(hex: 0x16213E)],
-        startPoint: .top, endPoint: .bottom)
+    /// A near-black used for pixel outlines across every theme (each theme also
+    /// carries its own `ink`, but outline strokes use this shared value for a
+    /// consistent hard-edged look).
+    static let pixelBlack = Color(hex: 0x151109)
 }
 
 extension Color {

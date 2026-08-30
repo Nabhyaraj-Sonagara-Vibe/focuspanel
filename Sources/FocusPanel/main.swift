@@ -13,9 +13,14 @@ MainActor.assumeIsolated {
     let delegate = AppDelegate()
     app.delegate = delegate
 
-    // `.regular` shows a Dock icon and standard menu; the floating window still
-    // stays above other apps because of its window level.
+    // `.regular` shows a Dock icon and standard menu; the floating panel still
+    // stays above other apps because of its window level + non-activating,
+    // no-hide-on-deactivate behaviour (see AppDelegate).
     app.setActivationPolicy(.regular)
+
+    // Register the bundled pixel font up front so the very first frame — the
+    // intro/boot animation — already renders in it (no one-frame fallback).
+    PixelFont.registerIfNeeded()
 
     // Minimal main menu so ⌘Q / ⌘W / ⌘H behave natively.
     let mainMenu = NSMenu()

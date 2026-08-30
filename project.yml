@@ -1,0 +1,85 @@
+name: FocusPanel
+options:
+  bundleIdPrefix: com.nabhyaraj.focuspanel
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+
+packages:
+  FocusPanelLocal:
+    path: .
+
+targets:
+  FocusPanel:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Sources/FocusPanel
+        excludes:
+          - "Resources/*.txt"
+    dependencies:
+      - target: FocusPanelCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nabhyaraj.focuspanel
+        PRODUCT_NAME: FocusPanel
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: Sources/FocusPanel/Info.plist
+        ENABLE_HARDENED_RUNTIME: YES
+        SWIFT_VERSION: "5.0"
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    info:
+      path: Sources/FocusPanel/Info.plist
+      properties:
+        CFBundleDisplayName: FocusPanel
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSApplicationCategoryType: public.app-category.productivity
+        LSUIElement: false
+        NSHumanReadableCopyright: "Copyright (c) 2026 Nabhyaraj-Sonagara-Vibe"
+
+  FocusPanelCore:
+    type: library.static
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Sources/FocusPanelCore
+    settings:
+      base:
+        SWIFT_VERSION: "5.0"
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+
+  FocusPanelCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Tests/FocusPanelCoreTests
+    dependencies:
+      - target: FocusPanelCore
+    settings:
+      base:
+        SWIFT_VERSION: "5.0"
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  FocusPanel:
+    build:
+      targets:
+        FocusPanel: all
+        FocusPanelCoreTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - FocusPanelCoreTests
+    archive:
+      config: Release
